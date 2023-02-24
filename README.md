@@ -8,5 +8,5 @@ Built with
 
 # Description
 This is an e-commerce web application that does the baisc functionalities that real world e-commerce do. some of this functionalities inlcude
-- Slug page for individual product
--
+- Slug page for individual product.
+- Add to cart depending on the availiable stock.
