@@ -1,6 +1,6 @@
 import Layout from "@/components/Layout";
 import ProductItem from "@/components/ProductItem";
-import data from "utilities/data";
+import data from "@/utilities/data";
 
 export default function Home({title}) {
   return (
