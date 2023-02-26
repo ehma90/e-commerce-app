@@ -9,7 +9,9 @@ import { Store } from "@/utilities/Store";
 export default function ProductScreen() {
   const { query } = useRouter();
   const { slug } = query;
-  const product = data.products.find((x) => x.slug === slug);
+  const product = data.products.find((item) => item.slug === slug);
+
+  const router = useRouter()
 
   const { state ,dispatch } = useContext(Store);
 
@@ -27,6 +29,7 @@ export default function ProductScreen() {
       alert("Sorry, Product is out of stuck")
     }
     dispatch({ type: 'CART_ADD_ITEM', payload: {...product, quantity}})
+    router.push("/cart")
   }
 
   return (
