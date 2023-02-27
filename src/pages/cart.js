@@ -1,12 +1,13 @@
 import Layout from "@/components/Layout";
 import { Store } from "@/utilities/Store";
 import { XCircleIcon } from "@heroicons/react/outline";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
 
-export default function Cart() {
+function Cart() {
   const { state, dispatch } = useContext(Store);
   const {
     cart: { cartItems },
@@ -123,3 +124,5 @@ export default function Cart() {
     </Layout>
   );
 }
+
+export default dynamic(() => Promise.resolve(Cart), {ssr: false})
