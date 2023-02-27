@@ -1,5 +1,22 @@
+import bcrypt from "bcrypt";
+const salt = bcrypt.genSaltSync(10);
+const hashedPassword = bcrypt.hashSync('123456', salt);
 
 const data = {
+  users: [
+    {
+      name: "john",
+      email: "test@gmail.com",
+      password: hashedPassword,
+      isAdmin: true
+    },
+    {
+      name: "jane",
+      email: "test@gmail.com",
+      password: hashedPassword,
+      isAdmin: false
+    },
+  ],
     products: [
         {
           name: 'Free Shirt',
