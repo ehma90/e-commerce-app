@@ -1,6 +1,7 @@
-import bcrypt from "bcrypt";
+
+const bcrypt = require('bcryptjs');
 const salt = bcrypt.genSaltSync(10);
-const hashedPassword = bcrypt.hashSync('123456', salt);
+const hashedPassword = bcrypt.hashSync("123456", salt);
 
 const data = {
   users: [
@@ -12,7 +13,7 @@ const data = {
     },
     {
       name: "jane",
-      email: "test@gmail.com",
+      email: "tests@gmail.com",
       password: hashedPassword,
       isAdmin: false
     },
