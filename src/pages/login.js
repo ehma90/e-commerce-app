@@ -1,14 +1,29 @@
 import { useForm } from "react-hook-form";
+import { useSession, signIn, signOut } from "next-auth/react"
 import Layout from "@/components/Layout";
 import Link from "next/link";
 import React from "react";
+import { toast } from "react-toastify";
+import { getError } from "@/utilities/error";
 
 export default function LoginScreen() {
     const {handleSubmit, register, formState: {errors}} = useForm()
 
     const submitHandler = ({email, password}) => {
-        console.log(email, password);
+        try {
+          const result =  await signIn('credentials', {
+            redirect: false,
+            email,
+            password,
+          });
+          if(result.error){
+            toast.error(result.error)
+          }
+        } catch (err) {
+          toast.error(getError(err))
+        }
     }
+
   return (
     <Layout title="Login">
       <form className="mx-auto max-w-screen-md" onSubmit={handleSubmit(submitHandler)}>
