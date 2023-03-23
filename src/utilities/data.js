@@ -1,7 +1,7 @@
 
 const bcrypt = require('bcryptjs');
-const salt = bcrypt.genSaltSync(10);
-const hashedPassword = bcrypt.hashSync("123456", salt);
+var salt = bcrypt.genSaltSync(10);
+var hashedPassword = bcrypt.hashSync("123456", salt);
 
 const data = {
   users: [
