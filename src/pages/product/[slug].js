@@ -1,32 +1,35 @@
+import axios from 'axios';
 import Layout from "@/components/Layout";
 import Image from "next/image";
 import Link from "next/link";
+import { toast } from 'react-toastify';
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
-import data from "@/utilities/data";
+import Product from 'models/Product';
 import { Store } from "@/utilities/Store";
+import db from "@/utilities/db";
 
-export default function ProductScreen() {
-  const { query } = useRouter();
-  const { slug } = query;
-  const product = data.products.find((item) => item.slug === slug);
+export default function ProductScreen(props) {
+  const {product} = props
 
   const router = useRouter()
 
   const { state ,dispatch } = useContext(Store);
 
   if (!product) {
-    return <h1>Product not found</h1>;
+    return <Layout title="Product not found">Product not found</Layout>;
   }
 
-  function addItemHandler(){
+  const addToCartHandler = async() => {
     const existItem = state.cart.cartItems.find(
       (x) => x.slug === product.slug
     );
-    const quantity = existItem ? existItem.quantity + 1 : 1
+    console.log(existItem);
+    const quantity = existItem ? existItem + 1 : 1
+    const {data} = await axios.get(`api/products/${product._id}`)
 
-    if(product.countInStock < quantity){
-      alert("Sorry, Product is out of stuck")
+    if(data.countInStock < quantity){
+      return toast.error('Sorry. Product is out of stock');
     }
     dispatch({ type: 'CART_ADD_ITEM', payload: {...product, quantity}})
     router.push("/cart")
@@ -67,10 +70,32 @@ export default function ProductScreen() {
                     <div>Status</div>
                     <div>{product.countInStock > 0 ? "In Stock" : "Unavailable"}</div>
                 </div>
-                <button className="primary-button w-full" onClick={addItemHandler}>Add to cart</button>
+                <button className="primary-button w-full" onClick={() => addToCartHandler()}>Add to cart</button>
             </div>
         </div>
       </div>
     </Layout>
   );
+}
+
+export async function getServerSideProps(context) {
+  const { params } = context;
+  const { slug } = params;
+
+  try {
+    await db.connect();
+    const product = await Product.findOne({ slug }).lean();
+    await db.disconnect();
+    if (!product) {
+      return { notFound: true };
+    }
+    const serializedProduct = JSON.parse(JSON.stringify(product));
+    return {
+      props: {
+        product: db.covertDocToObj(serializedProduct),
+      },
+    };
+  } catch (error) {
+    return { props: { product: null } };
+  }
 }
